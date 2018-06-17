@@ -3,11 +3,11 @@
 <head>
 	<title>Movie Time</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  	<link rel="icon" type="image/png" href="images/icon.png"/>
+  	<!-- <link rel="icon" type="image/png" href="images/icon.png"/> -->
   	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   	<link rel="stylesheet" type="text/css" href="css/styles.css">
-  	<link rel="stylesheet" type="text/css" href="css/mediaQueries.css">
+  	<!-- <link rel="stylesheet" type="text/css" href="css/mediaQueries.css"> -->
 </head>
 <body>
 	<div class="container">
@@ -16,38 +16,55 @@
 				<h1 class="display-4"><span>Movie</span><span>Time</span></h1>
 			</div>
 		</div> -->
-		<div class="row align-items-center full-height">
+		<div class="row align-items-center justify-content-center full-height">
 			<h1 class="display-4"><span>Movie</span><span>Time</span></h1>
-			<div class="col-12 search-input">
+			<div class="col-9 search-input">
 				<div class="input-group mb-3">
-  					<input type="text" class="form-control" placeholder="Search any movie or TV show" aria-describedby="basic-addon2">
+  					<input type="text" class="form-control movie-search" placeholder="Search any Movie or TV Show" aria-describedby="basic-addon2">
 	  				<div class="input-group-append">
-	    				<button class="btn btn-outline-secondary" type="button"></button>
+	    				<button class="btn search-button" type="button"><i class="fas fa-search"></i></button>
 	  				</div>
 				</div>
+
+				<p style="color: grey" class="text-center">or</p>
+
 				<div class="input-group input-group-sm mb-3">
+  					<span style="color: lightgrey;min-width: 130px;" class="mr-5">Search by title</span>
   					<div class="input-group-prepend">
-    					<span class="input-group-text" id="inputGroup-sizing-sm">Name</span>
+    					<span class="input-group-text" id="inputGroup-sizing-sm">Title</span>
   					</div>
-  					<input id="name-input" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-				</div>
-				<div class="input-group input-group-sm mb-3">
+  					<input id="name-input" type="text" class="form-control mr-5" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
   					<div class="input-group-prepend">
     					<span class="input-group-text" id="inputGroup-sizing-sm">Year</span>
   					</div>
   					<input id="year-input" type="number" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
 				</div>
+
 				<div class="input-group input-group-sm mb-3">
+					<span style="color: lightgrey;min-width: 130px;" class="mr-5">Search by IMBD id</span>
   					<div class="input-group-prepend">
     					<span class="input-group-text" id="inputGroup-sizing-sm">IMBD id</span>
   					</div>
   					<input id="imbd-input" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
 				</div>
+				<div class="row mt-4">
+					<button class="btn btn-outline-secondary search-outline-button" style="margin: auto;">Search</button>
+				</div>
 			</div>
 			
 		</div>
 
-		<div class="row">
+		<div>
+			<span id="result-count" class="lead mb-1">Results</span>
+			<div id="movie-results" class="row mb-5 justify-content-around">
+			</div>
+			<nav area-label="search navigation">
+			  <ul class="pagination justify-content-center">
+			  </ul>
+			</nav>
+		</div>
+
+		<div class="row" id="movie-card">
 			<div class="col-12">
 				<div class="movie-info">
 					<div class="row">
