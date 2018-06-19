@@ -41,9 +41,9 @@
 				</div>
 
 				<div class="input-group input-group-sm mb-3">
-					<span style="color: lightgrey;min-width: 130px;" class="mr-5">Search by IMBD id</span>
+					<span style="color: lightgrey;min-width: 130px;" class="mr-5">Search by IMBd id</span>
   					<div class="input-group-prepend">
-    					<span class="input-group-text" id="inputGroup-sizing-sm">IMBD id</span>
+    					<span class="input-group-text" id="inputGroup-sizing-sm">IMBd id</span>
   					</div>
   					<input id="imbd-input" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
 				</div>
@@ -54,17 +54,17 @@
 			
 		</div>
 
-		<div>
-			<span id="result-count" class="lead mb-1">Results</span>
+		<div id="search-results">
+			<span id="result-count" class="lead mb-1"></span>
 			<div id="movie-results" class="row mb-5 justify-content-around">
 			</div>
 			<nav area-label="search navigation">
-			  <ul class="pagination justify-content-center">
+			  <ul id="pagination-search" class="pagination justify-content-center">
 			  </ul>
 			</nav>
 		</div>
 
-		<div class="row" id="movie-card">
+		<div class="row pt-4" id="movie-card">
 			<div class="col-12">
 				<div class="movie-info">
 					<div class="row">
@@ -75,11 +75,24 @@
 							<div class="row movie-data">
 								<span class="col-12 movie-name"></span>
 								<small class="col-12 movie-runtime"></small>
-								<span class="col-12 movie-plot mt-3"></span>
+								<hr>
+								<span class="col-12 movie-plot"></span>
 								<span class="col-12 movie-director mt-2"></span>
 								<span class="col-12 movie-writer"></span>
 								<span class="col-12 movie-actors"></span>
+								<div class="col-12">
+									<div class="row movie-rated"></div>
+								</div>
+								<span class="col-12 movie-awards"></span>
+								<span class="col-12 movie-production"></span>
+								<span class="col-12 movie-box-office"></span>
+								<div class="col-12">
+									<div class="row movie-ratings"></div>
+								</div>
+								<span class="col-12 movie-website"></span>
+								<span class="col-12 movie-yt"></span>
 							</div>
+							<!-- end movie data -->
 						</div>
 					</div>
 				</div>
@@ -89,11 +102,43 @@
 	</div>
 	<!-- end container -->
 
+	<footer>
+		<div class="container">
+			<div class="row pt-4 justify-content-between">
+				<div class="col-auto">
+					<div class="row">
+						<div class="col-12">
+							<span class="mr-3">Made using OMDb API</span>
+						</div>
+						<div class="col-12">
+							<small><a href="http://www.omdbapi.com">www.omdbapi.com</a></small>
+						</div>
+					</div>
+				</div>
+				<div class="col-auto text-right">
+					<div class="row">
+						<div class="col-12">
+							<a href="https://github.com/nitin095"><i class="fab fa-github mr-3"></i></a>
+						</div>
+						<div class="col-12">
+							<i class="fas fa-at"></i>
+							<small>nitinshokeen9@gmail.com</small>
+						</div>
+					</div>
+				</div>
+				<div class="col-12 text-center">
+					<small style="color: grey">&copy;Nitin Shokeen 2018</small>
+				</div>
+			</div>
+		</div>
+	</footer>
+
 	 <!-- Javascript -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  <script src="js/script.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/esimakin-twbs-pagination-9b6d211/jquery.twbsPagination.js"></script>
 </body>
 </html>
