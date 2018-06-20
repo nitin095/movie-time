@@ -31,7 +31,7 @@ let getMovieInfo = (params,pageRequst=false) => {
     $.ajax({
         type: 'GET', // request type GET, POST, PUT
         dataType: 'json', // requesting datatype
-        url: `http://www.omdbapi.com/${params}&apikey=243fd441`, // URL of getting data
+        url: `https://www.omdbapi.com/${params}&apikey=243fd441`, // URL of getting data
 
         success: (data) => { // in case of success response
             console.log(data)
