@@ -2,6 +2,7 @@ body{
 	background-image: linear-gradient(to right top, #2f0f07, #2a0f1b, #1d1425, #0d1825, #07191e);
 	background-attachment: fixed;
 	color: white;
+	transition: all 1s ease-in-out;
 }
 body:before {
     content: "";
@@ -43,6 +44,9 @@ input{
 	/*margin: 10rem 0rem;*/
 	padding: 2rem;
 	background: rgba(0,0,0,0.4);
+	-webkit-box-shadow: -15px 15px 39px -13px rgba(0,0,0,0.75);
+-moz-box-shadow: -15px 15px 39px -13px rgba(0,0,0,0.75);
+box-shadow: -15px 15px 39px -13px rgba(0,0,0,0.75);
 }
 .search-input input{
 	/*background: rgba(247, 185, 140,0.7);*/
@@ -59,6 +63,24 @@ input{
 }
 input.movie-search{
 	font-size: 1.2rem;
+	border-left: 1px solid transparent;
+}
+.type-select{
+	background: rgba(247, 185, 140,0.2);
+	color: #fff;
+	border: 1px solid rgba(247, 185, 140,0.9);
+	border-right: 1px solid transparent;
+}
+.type-select option{
+	background: rgba(0,0,0,0.8);
+	color: #fff;
+}
+select.type-select option:hover {
+	 box-shadow: 0 0 10px 100px #1882A8 inset;
+}
+.type-select:focus{
+	outline: none;
+	
 }
 .search-button{
 	background: rgba(247, 92, 81,0.5);
@@ -66,7 +88,7 @@ input.movie-search{
 	padding: 0.8rem 1.2rem;
 	border-radius: 0px;
 	border: 1px solid rgba(247, 185, 140,0.9);
-	transition: all 0.25s ease;
+	transition: all 0.5s ease;
 }
 .search-button:hover{
 	background: #fff;
@@ -74,14 +96,15 @@ input.movie-search{
 	font-weight: bold;
 }
 .search-outline-button{
-	border: 1px solid whitesmoke;
+	border: 1px solid rgba(247, 185, 140,0.9);
 	color: whitesmoke;
 	border-radius: 0px;
 	letter-spacing: 1px;
+	transition: all 0.5s ease;
 }
 .search-outline-button:hover{
 	background: rgba(247, 92, 81,0.5);
-	border: 1px solid whitesmoke;
+	border: 1px solid rgba(247, 185, 140,0.9);
 }
 .input-group-text{
 	background: rgba(247, 92, 81,0.5);
@@ -170,5 +193,39 @@ a:hover{
 }
 footer{
 	color: rgba(247, 185, 140,0.8);
-	background: rgba(0,0,0,0.4);
+	background: rgba(247, 92, 81,0.2);
+	-webkit-box-shadow: 0px -5px 57px -12px rgba(0,0,0,1);
+	-moz-box-shadow: 0px -5px 57px -12px rgba(0,0,0,1);
+	box-shadow: 0px -5px 57px -12px rgba(0,0,0,1);
+	position: relative;
+	bottom: 0;
 }
+footer i{
+	transition: all 0.5s ease;
+}
+footer i.fab:hover{
+	transform: scale(1.3);
+}
+
+/* Scrollbar */
+
+/*width*/
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/*Track*/
+::-webkit-scrollbar-track {
+  background: grey;
+}
+
+/*Handle*/
+::-webkit-scrollbar-thumb {
+  background: rgba(247, 185, 140,0.8);
+}
+
+/*Handle on hover*/
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(247, 92, 81,0.8);
+}
+/* end Scrollbar */

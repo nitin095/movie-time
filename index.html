@@ -7,6 +7,7 @@
   	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   	<link rel="stylesheet" type="text/css" href="css/styles.css">
+  	<link rel="stylesheet" href="plugins/ladda-bootstrap-master/ladda-themeless.min.css">
   	<!-- <link rel="stylesheet" type="text/css" href="css/mediaQueries.css"> -->
 </head>
 <body>
@@ -20,7 +21,17 @@
 			<h1 class="display-4"><span>Movie</span><span>Time</span></h1>
 			<div class="col-9 search-input">
 				<div class="input-group mb-3">
-  					<input type="text" class="form-control movie-search" placeholder="Search any Movie or TV Show" aria-describedby="basic-addon2">
+					<div class="input-group-prepend">
+						<select class="type-select pl-1">
+						 	<option class="dropdown-item" value="movie" selected="selected">
+						 		Movies
+						 	</option>
+						 	<option class="dropdown-item" value="series">Series</option>
+						 	<option class="dropdown-item" value="episode">Episodes</option>
+						 	<option class="dropdown-item" value="game">Games</option>
+						</select>    
+				  	</div>
+  					<input type="text" class="form-control movie-search" placeholder="Search for any movie" aria-describedby="basic-addon2">
 	  				<div class="input-group-append">
 	    				<button class="btn search-button" type="button"><i class="fas fa-search"></i></button>
 	  				</div>
@@ -48,7 +59,7 @@
   					<input id="imbd-input" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
 				</div>
 				<div class="row mt-4">
-					<button class="btn btn-outline-secondary search-outline-button" style="margin: auto;">Search</button>
+					<button class="btn btn-outline-secondary search-outline-button ladda-button" style="margin: auto;" data-style="zoom-out" data-spinner-size="40" data-spinner-color="#ff0000"><span class="ladda-label">Search</span></button>
 				</div>
 			</div>
 			
@@ -102,7 +113,7 @@
 	</div>
 	<!-- end container -->
 
-	<footer>
+	<footer>	
 		<div class="container">
 			<div class="row pt-4 justify-content-between">
 				<div class="col-auto">
@@ -111,7 +122,7 @@
 							<span class="mr-3">Made using OMDb API</span>
 						</div>
 						<div class="col-12">
-							<small><a href="http://www.omdbapi.com">www.omdbapi.com</a></small>
+							<small><a href="http://www.omdbapi.com" target="blank">www.omdbapi.com</a></small>
 						</div>
 					</div>
 				</div>
@@ -140,5 +151,8 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="js/app.js"></script>
   <script src="js/esimakin-twbs-pagination-9b6d211/jquery.twbsPagination.js"></script>
+  <script src="plugins/ladda-bootstrap-master/dist/spin.min.js"></script>
+  <script src="plugins/ladda-bootstrap-master/dist/ladda.min.js"></script>
+
 </body>
 </html>
