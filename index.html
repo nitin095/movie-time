@@ -7,7 +7,6 @@
   	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   	<link rel="stylesheet" type="text/css" href="css/styles.css">
-  	<link rel="stylesheet" href="plugins/ladda-bootstrap-master/ladda-themeless.min.css">
   	<!-- <link rel="stylesheet" type="text/css" href="css/mediaQueries.css"> -->
 </head>
 <body>
@@ -61,12 +60,20 @@
 				<div class="row mt-4">
 					<button class="btn btn-outline-secondary search-outline-button ladda-button" style="margin: auto;" data-style="zoom-out" data-spinner-size="40" data-spinner-color="#ff0000"><span class="ladda-label">Search</span></button>
 				</div>
-			</div>
-			
-		</div>
 
-		<div id="search-results">
-			<span id="result-count" class="lead mb-1"></span>
+				
+				<div class="loader col-12">
+					<div class="row align-items-center justify-content-center">
+						<img src="images/loader/movie.png" class="img-fluid">
+					</div>
+                </div>
+
+			</div><!-- end col --> 
+			
+		</div><!-- end row -->
+
+		<div id="search-results" class="my-5">
+			<span id="result-count" class="lead px-2"></span>
 			<div id="movie-results" class="row mb-5 justify-content-around">
 			</div>
 			<nav area-label="search navigation">
@@ -79,10 +86,10 @@
 			<div class="col-12">
 				<div class="movie-info">
 					<div class="row">
-						<div class="col-auto pr-0">
+						<div class="col-3 pr-0">
 							<img src="" class="movie-poster img-fluid p-0">
 						</div>
-						<div class="col-8">
+						<div class="col-9">
 							<div class="row movie-data">
 								<span class="col-12 movie-name"></span>
 								<small class="col-12 movie-runtime"></small>
@@ -113,6 +120,8 @@
 	</div>
 	<!-- end container -->
 
+	<div id="toast"></div>
+
 	<footer>	
 		<div class="container">
 			<div class="row pt-4 justify-content-between">
@@ -129,7 +138,7 @@
 				<div class="col-auto text-right">
 					<div class="row">
 						<div class="col-12">
-							<a href="https://github.com/nitin095"><i class="fab fa-github mr-3"></i></a>
+							<a href="https://github.com/nitin095" target="blank"><i class="fab fa-github mr-3"></i></a>
 						</div>
 						<div class="col-12">
 							<i class="fas fa-at"></i>
@@ -151,8 +160,5 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="js/app.js"></script>
   <script src="js/esimakin-twbs-pagination-9b6d211/jquery.twbsPagination.js"></script>
-  <script src="plugins/ladda-bootstrap-master/dist/spin.min.js"></script>
-  <script src="plugins/ladda-bootstrap-master/dist/ladda.min.js"></script>
-
 </body>
 </html>

@@ -2,26 +2,34 @@ let searchInput;
 let inputType;
 let movieInfo;
 let bodyHeight;
-$(document).ready(() => {
-	searchInput = $('.movie-search');
-	let titleInput = $('#name-input');
-	let yearInput = $('#year-input');
-	let imbdInput = $('#imbd-input');
 
+$(document).ready(() => {
+	
 	$('button.search-button').click(()=>{
-		inputType = $('.type-select option:selected').val();
-		getMovieInfo(`?s=${searchInput.val()}&type=${inputType}`);
-		 $('html, body').animate({
-        	scrollTop: $("#search-results").offset().top
-    	}, 1000);
+        searchInput = $('.movie-search').val();
+        if (!searchInput) {
+            toast("No input!","warning");
+        }else{
+            inputType = $('.type-select option:selected').val();
+            getMovieInfo(`?s=${searchInput}&type=${inputType}`);
+            $('.search-input').find('.loader').show();
+        }  
 	});
 
 	$('.search-outline-button').click(()=>{
-		console.log(yearInput.val());
-		getMovieInfo(`?t=${titleInput.val()}&y=${yearInput.val()}&i=${imbdInput.val()}`);
-		$('html, body').animate({
-        	scrollTop: $("#movie-card").offset().top
-    		}, 1000);
+        let titleInput = $('#name-input').val();
+        let yearInput = $('#year-input').val();
+        let imbdInput = $('#imbd-input').val();
+        console.log("t:"+titleInput+" y:"+yearInput +" i:"+imbdInput)
+         console.log("t:"+!titleInput+" y:"+!yearInput +" i:"+!imbdInput)
+        if (!titleInput && !yearInput && !imbdInput) {
+            toast("No input!","warning");
+        }else if (!titleInput && yearInput) {
+            toast("Please provide title.")
+        }else{
+            $('.search-input').find('.loader').show();
+            getMovieInfo(`?t=${titleInput}&y=${yearInput}&i=${imbdInput}`,'title');
+        }
 	});
 
 });//end document.ready function
@@ -38,32 +46,43 @@ $( window ).resize(function() {
 	}
 });//end window.resize function
 
-let getMovieInfo = (params,pageRequst=false) => {
+let toast = (message,type="danger") => {
+    let t = $("#toast");
+    if (type == "warning") {
+        t.css({"color":"orange","bottom":"70%"});
+    }else{
+        t.css({"color":"rgb(242,65,65)","bottom":"70%"});
+    }
+    t.text(message);
+    t.animate({opacity: "1",bottom: "+=100px"});
+    setTimeout(()=>{ t.animate({opacity: "0",bottom: "+=100px"}); }, 5000);
+    }
+
+let getMovieInfo = (params,requestType="search",pageRequst=false) => {
 
     console.log("making request")
     console.log(`${params}&apikey=243fd441`);
     console.log("pageRequst: "+pageRequst);
 
     let $pagination = $('#pagination-search');
-    //$pagination.twbsPagination(defaultOpts);
 
     $.ajax({
-        type: 'GET', // request type GET, POST, PUT
-        dataType: 'json', // requesting datatype
-        url: `https://www.omdbapi.com/${params}&apikey=243fd441`, // URL of getting data
+        type: 'GET', 
+        dataType: 'json',
+        url: `https://www.omdbapi.com/${params}&apikey=243fd441`, 
 
-        success: (data) => { // in case of success response
-            console.log(data)
-    		 
+        success: (data) => { 
+            console.log(data);
+		 if (data.Response == 'True') {
+            console.log("RUNNING CODE")
             if(data.Search){
             	movieInfo = data.Search;
-
             	let searchType = inputType; 
             	if (!searchType.endsWith('s') && data.totalResults > 1) {
             		searchType += 's';
             	}
 
-            	$('#result-count').text(`${data.totalResults} ${searchType} found with '${searchInput.val()}'`);
+            	$('#result-count').text(`${data.totalResults} ${searchType} found with '${searchInput}'`);
             	let resultsContainer = $('#movie-results');
             	resultsContainer.html("");
             	for(let movie of movieInfo){
@@ -79,6 +98,9 @@ let getMovieInfo = (params,pageRequst=false) => {
 						<div class="col-12 poster-container">
 						<img src="${moviePoster}" class="img-fluid movie-search-poster">
 						</div>
+                        <div class="loader col-12">
+                        <img src="images/loader/movie.png" class="img-fluid mt-5">
+                        </div>
 						<small class="col-12 search-title my-1">${movie.Title}</small>
 						<small class="col-12 search-year">${movie.Year}</small>
 						<small class="col-12 search-imbd d-none">${movie.imdbID}</small>
@@ -89,30 +111,27 @@ let getMovieInfo = (params,pageRequst=false) => {
 
  				$(resultsContainer).find('.search-card').click(function(){
  					console.log('search item clicked')
- 					getMovieInfo(`?i=${$(this).find('.search-imbd').text()}`);
- 					$('html, body').animate({
-			        	scrollTop: $("#movie-card").offset().top
-			    	}, 1000);
+ 					getMovieInfo(`?i=${$(this).find('.search-imbd').text()}`,'id');
+ 					$(this).find('.loader').show();
  				});
+
             	if (!pageRequst) {
-      
             	 $pagination.twbsPagination('destroy');
             	 $pagination.twbsPagination({
 			        totalPages: Math.ceil(data.totalResults/10),
 			        visiblePages: 10,
 			        onPageClick: function (event, page) {
 			            $('#page-content').text('Page ' + page);
-			            getMovieInfo(`?s=${searchInput.val()}&page=${page}&type=${inputType}`,true);
+			            getMovieInfo(`?s=${searchInput}&page=${page}&type=${inputType}`,'search',true);
 			        }
-			    });
-  
-            	 }//end if(!pageRequest)
+			     });
+            	}//end if(!pageRequest)
 
             //end data.Search if
             }else{
             	movieInfo = data;
             	$('#movie-card').show();
-            	 $(".movie-name").text(`${movieInfo.Title} (${movieInfo.Year})`); // placing data in division with id - 'showData'
+            	 $(".movie-name").text(`${movieInfo.Title} (${movieInfo.Year})`);
             	 let moviePoster;
             	 if (movieInfo.Poster == "N/A") {
             	 	moviePoster = `images/${inputType}-poster-placeholder.jpg`;
@@ -164,45 +183,56 @@ let getMovieInfo = (params,pageRequst=false) => {
             		  height: ${bodyHeight}px;
             		 }</style>` ).appendTo( "head" );
             }//end else
-            
-
-            //console.log(movieInfo.Title);
-
-            // let tempRow = ` <div class="row">
-            //                          <div class="col">${movieInfo.Title}</div>
-            //                          <div class="col">${movieInfo.Year}</div>
-            //                           <div class="col">${movieInfo.Actors}</div>
-            //                     </div>`
+        }else{
+            if (data.Error) {
+                toast(data.Error);
+            }
+        }
 
         },
-        error: (data) => { // in case of error response
-
-            alert("some error occured")
+        error: (data) => { 
+             if (data.statusText == "timeout") {
+                toast("Request timed out. Please try again.");
+            }
+            if (data.statusText == "parsererror") {
+                toast("Parse error! Cannot load data.");
+            }
             console.log(data);
-
         },
 
-        beforeSend: () => { // while request is processing.
+        beforeSend: () => { 
 
             // you can use loader here.
             //alert("request is being made. please wait")
 
         },
-        complete: () => {
+        complete: (data) => {
+            console.log(data)
 
-        	console.log("INPUT TYPE IS "+inputType);
-
-            // what you want to do while request is completed
-            //alert("data fetched success")
             //if poster can't be loaded or is 404, replacing with placeholder.
     		$(".movie-poster,.movie-search-poster").on("error",function() {
-				console.log("HANDLING POSTER ERROR")
+				console.log("HANDLING POSTER ERROR");
 				this.src = `images/${inputType}-poster-placeholder.jpg`;
 			});
 
+            if (!data.responseJSON.Error) {
+                if (requestType == "search") {
+                    $('html, body').animate({
+                        scrollTop: $("#search-results").offset().top
+                    }, 1000);
+                }else{
+                    $('html, body').animate({
+                        scrollTop: $("#movie-card").offset().top
+                    }, 1000);
+                    $('#result-count').css({"color":"#fff","background":"rgba(247,92,81,0.8)"});
+                }
+            }
+
+            $('.loader').hide();
+
         	},
 
-        timeout:10000 // this is in milli seconds
+        timeout:10000
 
     }); // end of AJAX request
 
