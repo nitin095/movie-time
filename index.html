@@ -3,24 +3,19 @@
 <head>
 	<title>Movie Time</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  	<!-- <link rel="icon" type="image/png" href="images/icon.png"/> -->
+  	<link rel="icon" type="image/png" href="images/icon.png"/>
   	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   	<link rel="stylesheet" type="text/css" href="css/styles.css">
-  	<!-- <link rel="stylesheet" type="text/css" href="css/mediaQueries.css"> -->
+  	<link rel="stylesheet" type="text/css" href="css/mediaQueries.css">
 </head>
 <body>
 	<div class="container">
-		<!-- <div class="row">
-			<div class="col-12">
-				<h1 class="display-4"><span>Movie</span><span>Time</span></h1>
-			</div>
-		</div> -->
 		<div class="row align-items-center justify-content-center full-height">
 			<h1 class="display-4"><span>Movie</span><span>Time</span></h1>
 			<div class="col-9 search-input">
-				<div class="input-group mb-3">
-					<div class="input-group-prepend">
+				<div class="input-group mb-3 row no-gutters justify-content-center">
+					<div class="input-group-prepend col-auto pb-3 p-lg-0">
 						<select class="type-select pl-1">
 						 	<option class="dropdown-item" value="movie" selected="selected">
 						 		Movies
@@ -30,38 +25,52 @@
 						 	<option class="dropdown-item" value="game">Games</option>
 						</select>    
 				  	</div>
-  					<input type="text" class="form-control movie-search" placeholder="Search for any movie" aria-describedby="basic-addon2">
-	  				<div class="input-group-append">
-	    				<button class="btn search-button" type="button"><i class="fas fa-search"></i></button>
+				  	<div class="col-12 col-sm-10 col-lg-auto flex-grow">
+  					<input type="text" class="form-control movie-search py-2" placeholder="Search for any movie" aria-describedby="basic-addon2">
+  					</div>
+	  				<div class="input-group-append col-auto pt-3 p-sm-0">
+	    				<button class="btn search-button px-3" type="button"><i class="fas fa-search"></i></button>
 	  				</div>
 				</div>
 
 				<p style="color: grey" class="text-center">or</p>
 
-				<div class="input-group input-group-sm mb-3">
-  					<span style="color: lightgrey;min-width: 130px;" class="mr-5">Search by title</span>
-  					<div class="input-group-prepend">
-    					<span class="input-group-text" id="inputGroup-sizing-sm">Title</span>
-  					</div>
-  					<input id="name-input" type="text" class="form-control mr-5" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-  					<div class="input-group-prepend">
-    					<span class="input-group-text" id="inputGroup-sizing-sm">Year</span>
-  					</div>
-  					<input id="year-input" type="number" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+				<div class="row no-gutters mb-3">
+					<span style="color: lightgrey" class="col-12 col-lg-3 pb-1 pb-lg-0">Search by title</span>
+					<div class="col-lg-auto flex-grow mr-lg-3">
+					<div class="input-group input-group-sm row no-gutters mb-2 m-lg-0">
+						<div class="input-group-prepend col-auto">
+						<span class="input-group-text" id="inputGroup-sizing-sm">Title</span>
+						</div>
+						<input id="name-input" type="text" class="form-control col-10" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+					</div>
+					</div>
+					<div class="col-lg-3">
+					<div class="input-group input-group-sm row no-gutters">	
+						<div class="input-group-prepend col-auto">
+						<span class="input-group-text" id="inputGroup-sizing-sm">Year</span>
+						</div>
+						<input id="year-input" type="number" class="form-control col-10" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+					</div>
+					</div>
 				</div>
 
-				<div class="input-group input-group-sm mb-3">
-					<span style="color: lightgrey;min-width: 130px;" class="mr-5">Search by IMBd id</span>
-  					<div class="input-group-prepend">
-    					<span class="input-group-text" id="inputGroup-sizing-sm">IMBd id</span>
-  					</div>
-  					<input id="imbd-input" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-				</div>
-				<div class="row mt-4">
-					<button class="btn btn-outline-secondary search-outline-button ladda-button" style="margin: auto;" data-style="zoom-out" data-spinner-size="40" data-spinner-color="#ff0000"><span class="ladda-label">Search</span></button>
+				<div class="row no-gutters">
+					<span style="color: lightgrey" class="col-12 col-lg-3 pb-1 pb-lg-0">Search by IMBd id</span>
+					<div class="col-lg-auto flex-grow">
+					<div class="input-group input-group-sm row no-gutters mb-3">
+	  					<div class="input-group-prepend">
+	    					<span class="input-group-text" id="inputGroup-sizing-sm">IMBd id</span>
+	  					</div>
+	  					<input id="imbd-input" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+					</div>
+					</div>
 				</div>
 
-				
+				<div class="row mt-2">
+					<button class="btn btn-outline-secondary search-outline-button" style="margin: auto;" data-style="zoom-out" data-spinner-size="40" data-spinner-color="#ff0000"><span class="ladda-label">Search</span></button>
+				</div>
+
 				<div class="loader col-12">
 					<div class="row align-items-center justify-content-center">
 						<img src="images/loader/movie.png" class="img-fluid">
@@ -72,9 +81,9 @@
 			
 		</div><!-- end row -->
 
-		<div id="search-results" class="my-5">
+		<div id="search-results">
 			<span id="result-count" class="lead px-2"></span>
-			<div id="movie-results" class="row mb-5 justify-content-around">
+			<div id="movie-results" class="row mb-5 no-gutters justify-content-around">
 			</div>
 			<nav area-label="search navigation">
 			  <ul id="pagination-search" class="pagination justify-content-center">
@@ -86,11 +95,11 @@
 			<div class="col-12">
 				<div class="movie-info">
 					<div class="row">
-						<div class="col-3 pr-0">
-							<img src="" class="movie-poster img-fluid p-0">
+						<div class="col-12 col-lg-3 pr-0">
+							<img src="" class="movie-poster img-fluid p-0 pt-5 pt-lg-0 mx-auto d-block">
 						</div>
-						<div class="col-9">
-							<div class="row movie-data">
+						<div class="col-12 col-lg-9">
+							<div class="row movie-data text-center text-lg-left">
 								<span class="col-12 movie-name"></span>
 								<small class="col-12 movie-runtime"></small>
 								<hr>

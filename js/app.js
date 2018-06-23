@@ -16,6 +16,13 @@ $(document).ready(() => {
         }  
 	});
 
+
+    $('.movie-search').keypress(function(e) {
+        if (e.which == 13) {
+            $('button.search-button').click();
+        }
+    });
+
 	$('.search-outline-button').click(()=>{
         let titleInput = $('#name-input').val();
         let yearInput = $('#year-input').val();
@@ -32,16 +39,22 @@ $(document).ready(() => {
         }
 	});
 
+    $('#name-input,#year-input,#imbd-input').keypress(function(e) {
+        if (e.which == 13) {
+            $('.search-outline-button').click();
+        }
+    });
+
 });//end document.ready function
 
 $( window ).resize(function() {
 	if ($('#movie-card').is(":visible")) {
     	$('head').find('style').remove();
-        bodyHeight = $(document).height() - 90;
+        bodyHeight = $('footer').offset();
         $( `<style>body:before 
            { background-image: url(${movieInfo.Poster});
              background-size: cover;
-             height: ${bodyHeight}px;
+             height: ${bodyHeight.top}px;
            }</style>` ).appendTo( "head" );
 	}
 });//end window.resize function
@@ -93,9 +106,9 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
             			moviePoster = `images/${inputType}-poster-placeholder.jpg`;
             		}
             		let movieSearchCard = `
-            			<div class="col-1 search-card my-2 p-0">
+            			<div class="col-5 col-sm-4 col-md-3 col-lg-2 col-xl-1 mx-2 search-card my-2">
 						<div class="row text-center">
-						<div class="col-12 poster-container">
+						<div class="col-12">
 						<img src="${moviePoster}" class="img-fluid movie-search-poster">
 						</div>
                         <div class="loader col-12">
@@ -174,14 +187,6 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
             	$('.display-4').find('span').first().css("background","rgba(255,255,255,0.8)");
             	$('.display-4').find('span').last().css("background","rgba(247,92,81,0.8)");
             	
-            	 //setting poster as body blurred background
-            	 bodyHeight = $(document).height() - 90;
-            	 $('head').find('style').remove();
-            	 $( `<style>body:before 
-            		{ background-image: url(${movieInfo.Poster});
-            		  background-size: cover;
-            		  height: ${bodyHeight}px;
-            		 }</style>` ).appendTo( "head" );
             }//end else
         }else{
             if (data.Error) {
@@ -215,20 +220,32 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
 				this.src = `images/${inputType}-poster-placeholder.jpg`;
 			});
 
-            if (!data.responseJSON.Error) {
-                if (requestType == "search") {
-                    $('html, body').animate({
-                        scrollTop: $("#search-results").offset().top
-                    }, 1000);
-                }else{
-                    $('html, body').animate({
-                        scrollTop: $("#movie-card").offset().top
-                    }, 1000);
-                    $('#result-count').css({"color":"#fff","background":"rgba(247,92,81,0.8)"});
+            if (data.responseJSON !== undefined) {
+                if (!data.responseJSON.Error) {
+                    if (requestType == "search") {
+                        $('html, body').animate({
+                            scrollTop: $("#search-results").offset().top
+                        }, 1000);
+                    }else{
+                        $('html, body').animate({
+                            scrollTop: $("#movie-card").offset().top
+                        }, 1000);
+                        $('#result-count').css({"color":"#fff","background":"rgba(247,92,81,0.8)"});
+                    }
                 }
             }
 
             $('.loader').hide();
+
+            setTimeout(()=>{ 
+                //setting poster as body blurred background
+                    bodyHeight = $('footer').offset();
+                    $('head').find('style').remove();
+                    $( `<style>body:before 
+                        { background-image: url(${movieInfo.Poster});
+                        height: ${bodyHeight.top}px;
+                        }</style>` ).appendTo( "head" );
+            }, 1000);
 
         	},
 
