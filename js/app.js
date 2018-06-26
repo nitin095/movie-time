@@ -6,17 +6,17 @@ let $pagination = $('#pagination-search');
 let visiblePages = 10;
 let totalPages;
 
-$(document).ready(() => {	
-	$('button.search-button').click(() => {
+$(document).ready(() => {
+    $('button.search-button').click(() => {
         searchInput = $('.movie-search').val();
         if (!searchInput) {
-            toast("No input!","warning");
-        }else{
+            toast("No input!", "warning");
+        } else {
             inputType = $('.type-select option:selected').val();
             getMovieInfo(`?s=${searchInput}&type=${inputType}`);
             $('.search-input').find('.loader').show();
-        }  
-	});
+        }
+    });
 
     $('.movie-search').keypress((e) => {
         if (e.which == 13) {
@@ -24,20 +24,20 @@ $(document).ready(() => {
         }
     });
 
-	$('.search-outline-button').click(()=>{
+    $('.search-outline-button').click(() => {
         let titleInput = $('#name-input').val();
         let yearInput = $('#year-input').val();
         let imbdInput = $('#imbd-input').val();
         if (!titleInput && !yearInput && !imbdInput) {
-            toast("No input!","warning");
-        }else if (!titleInput && yearInput) {
+            toast("No input!", "warning");
+        } else if (!titleInput && yearInput) {
             toast("Please provide title.")
-        }else{
+        } else {
             $('.search-input').find('.loader').show();
-            getMovieInfo(`?t=${titleInput}&y=${yearInput}&i=${imbdInput}`,'title');
+            getMovieInfo(`?t=${titleInput}&y=${yearInput}&i=${imbdInput}`, 'title');
             getStoryline(`?t=${titleInput}&y=${yearInput}&i=${imbdInput}`);
         }
-	});
+    });
 
     $('#name-input,#year-input,#imbd-input').keypress((e) => {
         if (e.which == 13) {
@@ -45,44 +45,60 @@ $(document).ready(() => {
         }
     });
 
-});//end document.ready function
+}); //end document.ready function
 
-$( window ).resize(() => {
-	if ($('#movie-card').is(":visible")) {
-    	$('head').find('style').remove();
+$(window).resize(() => {
+    //setting body:before height on window resize
+    if ($('#movie-card').is(":visible")) {
+        $('head').find('style').remove();
         bodyHeight = $('footer').offset();
-        $( `<style>body:before 
+        $(`<style>body:before 
            { background-image: url(${movieInfo.Poster});
              background-size: cover;
              height: ${bodyHeight.top}px;
-           }</style>` ).appendTo( "head" );
-	}
+           }</style>`).appendTo("head");
+    }
 
+    //setting pagination width on window resize
     if ($(document).width() < 992 && $(document).width() > 400) {
-        setPagination(totalPages,4);
-    }else if ($(document).width() < 400){
-        setPagination(totalPages,1);
-    }else{
+        setPagination(totalPages, 4);
+    } else if ($(document).width() < 400) {
+        setPagination(totalPages, 1);
+    } else {
         setPagination(totalPages);
     }
 
-});//end window.resize function
+}); //end window.resize function
 
 //function to show error alert
-let toast = (message,type="danger") => {
+let toast = (message, type = "danger") => {
     let t = $("#toast");
     if (type == "warning") {
-        t.css({"color":"orange","bottom":"70%"});
-    }else{
-        t.css({"color":"rgb(242,65,65)","bottom":"70%"});
+        t.css({
+            "color": "orange",
+            "bottom": "70%"
+        });
+    } else {
+        t.css({
+            "color": "rgb(242,65,65)",
+            "bottom": "70%"
+        });
     }
     t.text(message);
-    t.animate({opacity: "1",bottom: "+=100px"});
-    setTimeout(()=>{ t.animate({opacity: "0",bottom: "+=100px"}); }, 5000);
+    t.animate({
+        opacity: "1",
+        bottom: "+=100px"
+    });
+    setTimeout(() => {
+        t.animate({
+            opacity: "0",
+            bottom: "+=100px"
+        });
+    }, 5000);
 };
 
-//function to set pagination
-let setPagination = (totalPages,visiblePages=10) => {
+//function to set pagination using 'twbsPagination' plugin
+let setPagination = (totalPages, visiblePages = 10) => {
     visiblePages = visiblePages;
     $pagination.twbsPagination('destroy');
     $pagination.twbsPagination({
@@ -92,36 +108,37 @@ let setPagination = (totalPages,visiblePages=10) => {
         hideOnlyOnePage: true,
         onPageClick: function (event, page) {
             $('#page-content').text('Page ' + page);
-            getMovieInfo(`?s=${searchInput}&page=${page}&type=${inputType}`,'search',true);
+            getMovieInfo(`?s=${searchInput}&page=${page}&type=${inputType}`, 'search', true);
         }
     });
 };
 
-let getMovieInfo = (params,requestType="search",pageRequst=false) => {
+//function to get data from omdb api 
+let getMovieInfo = (params, requestType = "search", pageRequst = false) => {
 
     $.ajax({
-        type: 'GET', 
+        type: 'GET',
         dataType: 'json',
-        url: `https://www.omdbapi.com/${params}&apikey=243fd441`, 
+        url: `https://www.omdbapi.com/${params}&apikey=243fd441`,
 
-        success: (data) => { 
-		 if (data.Response == 'True') {
-            if(data.Search){
-                //search data
-            	showSearchResults(data,pageRequst);
-            }else{
-                //particular movie data
-                showMovieCard(data);	
+        success: (data) => {
+            if (data.Response == 'True') {
+                if (data.Search) {
+                    //search data
+                    showSearchResults(data, pageRequst);
+                } else {
+                    //particular movie data
+                    showMovieCard(data);
+                }
+            } else {
+                if (data.Error) {
+                    toast(data.Error);
+                }
             }
-        }else{
-            if (data.Error) {
-                toast(data.Error);
-            }
-        }
 
         },
-        error: (data) => { 
-             if (data.statusText == "timeout") {
+        error: (data) => {
+            if (data.statusText == "timeout") {
                 toast("Request timed out. Please try again.");
             }
             if (data.statusText == "parsererror") {
@@ -130,19 +147,18 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
             console.log(data);
         },
 
-        beforeSend: () => { 
-
-            // you can use loader here.
-            //alert("request is being made. please wait")
-
+        beforeSend: () => {
+            if (pageRequst) {
+                $('#search-results').find('.spinner-row').show();
+            }
         },
         complete: (data) => {
             //if poster can't be loaded or is 404, replacing with placeholder.
-    		$(".movie-poster,.movie-search-poster").on("error",function() {
-				console.log("HANDLING POSTER ERROR");
-				this.src = `images/${inputType}-poster-placeholder.jpg`;
-			});
-            
+            $(".movie-poster,.movie-search-poster").on("error", function () {
+                console.log("HANDLING POSTER ERROR");
+                this.src = `images/${inputType}-poster-placeholder.jpg`;
+            });
+
             //scrollling window and applying background
             if (data.responseJSON !== undefined) {
                 if (!data.responseJSON.Error) {
@@ -150,37 +166,44 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
                         $('html, body').animate({
                             scrollTop: $("#search-results").offset().top
                         }, 1000);
-                    }else{
+                    } else {
                         $('html, body').animate({
                             scrollTop: $("#movie-card").offset().top
                         }, 1000);
-                        $('#result-count').css({"color":"#fff","background":"rgba(247,92,81,0.8)"});
+                        $('#result-count').css({
+                            "color": "#fff",
+                            "background": "rgba(247,92,81,0.8)"
+                        });
                     }
-                    setTimeout(()=>{ 
+                    setTimeout(() => {
                         //setting poster as body blurred background
                         if (requestType !== 'search') {
                             bodyHeight = $('footer').offset();
                             $('head').find('style').remove();
-                            $( `<style>body:before 
+                            $(`<style>body:before 
                                 { background-image: url(${movieInfo.Poster});
                                 height: ${bodyHeight.top}px;
-                                }</style>` ).appendTo( "head" );
+                                }</style>`).appendTo("head");
                         }
                     }, 1000);
                 }
-            }//end if
+            } //end if
             //hiding loader
             $('.loader').hide();
+            if (pageRequst) {
+                $('#search-results').find('.spinner-row').hide();
+            }
 
-        	},
-        timeout:10000
+        },
+        timeout: 10000
     }); // end of AJAX request
 
 }; // end of getMovieInfo
 
 
-let showSearchResults = (data,pageRequst) => {
+let showSearchResults = (data, pageRequst) => {
     movieInfo = data.Search;
+    $('#search-results').show();
     let searchType = inputType;
     //adding 's' to the end of searchType if it doesn't end with 's'
     //and search results are greater than 1
@@ -188,17 +211,21 @@ let showSearchResults = (data,pageRequst) => {
         searchType += 's';
     }
     $('#result-count').text(`${data.totalResults} ${searchType} found with '${searchInput}'`);
-                
+
     let resultsContainer = $('#movie-results');
-    resultsContainer.html("");
+    resultsContainer.html(`
+        <div class="spinner-row">
+            <div class="spinner"></div>
+        </div>
+        `);
 
     //looping through all found movies
-    for(let movie of movieInfo){
-                    
+    for (let movie of movieInfo) {
+
         let moviePoster;
-        if (movie.Poster !=="N/A") {
+        if (movie.Poster !== "N/A") {
             moviePoster = movie.Poster;
-        }else{
+        } else {
             moviePoster = `images/${inputType}-poster-placeholder.jpg`;
         }
 
@@ -217,13 +244,13 @@ let showSearchResults = (data,pageRequst) => {
             <small class="col-12 search-imbd d-none">${movie.imdbID}</small>
             </div>
             </div>`;
-            resultsContainer.append(movieSearchCard);
-    }//end for loop
+        resultsContainer.append(movieSearchCard);
+    } //end for loop
 
     //to get full details of a movie on click
-    $(resultsContainer).find('.search-card').click(function(){
+    $(resultsContainer).find('.search-card').click(function () {
         let id = $(this).find('.search-imbd').text();
-        getMovieInfo(`?i=${id}`,'id');
+        getMovieInfo(`?i=${id}`, 'id');
         $(this).find('.loader').show();
         getStoryline(`?i=${id}`);
     });
@@ -233,36 +260,39 @@ let showSearchResults = (data,pageRequst) => {
         if ($(document).width() < 992) {
             visiblePages = 4;
         }
-        totalPages = Math.ceil(data.totalResults/10);
-        setPagination(totalPages,visiblePages)
-    }//end if(!pageRequest)
+        totalPages = Math.ceil(data.totalResults / 10);
+        setPagination(totalPages, visiblePages)
+    } //end if(!pageRequest)
 
-};//end showSearchResults
+}; //end showSearchResults
 
 let showMovieCard = (data) => {
     movieInfo = data;
     $('#movie-card').show();
+    $('#movie-card').find('span').show();
     $(".movie-name").text(`${movieInfo.Title} (${movieInfo.Year})`);
-                
+
     let moviePoster;
     if (movieInfo.Poster == "N/A") {
         moviePoster = `images/${inputType}-poster-placeholder.jpg`;
-    }else{
+    } else {
         moviePoster = movieInfo.Poster;
     }
 
-    $(".movie-poster").attr("src",moviePoster);
+    $(".movie-poster").attr("src", moviePoster);
     $(".movie-runtime").text(`${movieInfo.Runtime} | ${movieInfo.Genre} | ${movieInfo.Released}`);
     $(".movie-plot").text(movieInfo.Plot);
     $(".movie-director").html(`<b>Director:</b> ${movieInfo.Director}`);
     $(".movie-writer").html(`<b>Writer:</b> ${movieInfo.Writer}`);
     $(".movie-actors").html(`<b>Actors:</b> ${movieInfo.Actors}`);
-                
+    $(".movie-box-office").html(`<b>Box office:</b>&nbsp;${movieInfo.BoxOffice}`);
+    $(".movie-yt").html(`<small><a href="https://www.youtube.com/results?search_query=${movieInfo.Title} ${movieInfo.Year} trailer" target="blank">View trailer on Youtube</a></small>`);
+ 
     //setting movie rated certificate logo
     let rated = movieInfo.Rated;
     if (rated !== "N/A") {
         $(".movie-rated").html(`<img src="images/rated/${rated}.png" class="img-fluid" alt="${rated}">`);
-    }else{
+    } else {
         $(".movie-rated").html('');
     }
 
@@ -302,12 +332,12 @@ let showMovieCard = (data) => {
     if (movieInfo.Awards !== "N/A") {
         $(".awards-card").show();
         $(".movie-awards").text(movieInfo.Awards);
-    }else{
+    } else {
         $(".awards-card").hide();
     }
 
     $(".movie-ratings .source").html('');
-    for(let rating in movieInfo.Ratings){
+    for (let rating in movieInfo.Ratings) {
         $(".movie-ratings .source").append(`
             <div class="col-12 col-sm-4 col-md-auto text-center right-seperator">
             <div class="row align-items-center justify-content-center py-2 py-md-0">
@@ -322,26 +352,20 @@ let showMovieCard = (data) => {
             </div>`);
     }
 
-    if (movieInfo.BoxOffice !== "N/A") {
-        $(".movie-box-office").html(`<b>Box office:</b>&nbsp;${movieInfo.BoxOffice}`);
-    }
-    if (movieInfo.Website !== "N/A") {
-        $(".movie-website").html();
-    }
-    $(".movie-yt").html(`<small><a href="https://www.youtube.com/results?search_query=${movieInfo.Title} ${movieInfo.Year} trailer" target="blank">View trailer on Youtube</a></small>`);
-    $('.search-input').css("background","rgba(0,0,0,0.7)");
-    $('.display-4').find('span').first().css("background","rgba(255,255,255,0.8)");
-    $('.display-4').find('span').last().css("background","rgba(247,92,81,0.8)");
-                
-};//end showMovieCard
+    $('.search-input').css("background", "rgba(0,0,0,0.7)");
+    $('.display-4').find('span').first().css("background", "rgba(255,255,255,0.8)");
+    $('.display-4').find('span').last().css("background", "rgba(247,92,81,0.8)");
+    //hiding all spans which contains 'N/A'
+    $('#movie-card').find('span:contains(N/A)').hide();
+}; //end showMovieCard
 
 //function to get movie storyline
 let getStoryline = (params) => {
     $.ajax({
-        type: 'GET', 
-        dataType: 'json', 
-        url: `https://www.omdbapi.com/${params}&plot=full&apikey=243fd441`, 
-        success: (data) => { 
+        type: 'GET',
+        dataType: 'json',
+        url: `https://www.omdbapi.com/${params}&plot=full&apikey=243fd441`,
+        success: (data) => {
             let storyline = $('.movie-storyline');
             let shortPlot = $('.movie-plot').text();
             storyline.parent().show();
@@ -350,8 +374,7 @@ let getStoryline = (params) => {
                 storyline.parent().hide();
             }
         },
-        error: (data) => {
-        },
+        error: (data) => {},
 
         beforeSend: () => {
 
@@ -360,7 +383,7 @@ let getStoryline = (params) => {
 
         },
 
-        timeout:10000 // this is in milli seconds
+        timeout: 10000 // this is in milli seconds
 
     });
 };

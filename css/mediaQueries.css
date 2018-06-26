@@ -1,11 +1,9 @@
 /*extra small devices*/
-@media screen and (max-width: 575px) {
-    
+@media screen and (max-width: 575px) {    
 .loader img{
     height: 10vw;
     width: 10vw;
 }
-
 }
 
 /*small devices*/
@@ -64,9 +62,3 @@
         justify-content: flex-start;
     } 
 }
-
-
-
-
-
-
