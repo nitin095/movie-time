@@ -142,6 +142,8 @@ select.type-select option:hover {
 }
 .detail-card{
 	background: rgba(63,3,3,0.7);
+}
+.movie-details{
 	word-break: break-all;
 }
 .detail-card .lead{
