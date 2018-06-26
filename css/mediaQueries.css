@@ -29,6 +29,12 @@
     .type-select{
      border-right: 1px solid transparent;
     }
+    .movie-ratings{
+        position: absolute;
+        bottom: 5%;
+        justify-content: flex-start;
+        padding: 0rem;
+    }
 }
 
 
@@ -39,7 +45,24 @@
     }
     .type-select{
     border-right: 1px solid transparent;
-    }  
+    }
+    .movie-rated{
+        display: inline-flex;
+        justify-content: flex-end;
+        position: absolute;
+        bottom: 5%;
+        right: 5%;
+    }
+    .movie-rated img{
+        height: 5vh;
+        width: auto;
+    } 
+    .movie-ratings{
+        position: absolute;
+        bottom: 5%;
+        padding: 0rem;
+        justify-content: flex-start;
+    } 
 }
 
 

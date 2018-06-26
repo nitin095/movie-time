@@ -2,6 +2,9 @@ let searchInput;
 let inputType;
 let movieInfo;
 let bodyHeight;
+let $pagination = $('#pagination-search');
+let visiblePages = 10;
+let totalPages;
 
 $(document).ready(() => {
 	
@@ -27,8 +30,6 @@ $(document).ready(() => {
         let titleInput = $('#name-input').val();
         let yearInput = $('#year-input').val();
         let imbdInput = $('#imbd-input').val();
-        console.log("t:"+titleInput+" y:"+yearInput +" i:"+imbdInput)
-         console.log("t:"+!titleInput+" y:"+!yearInput +" i:"+!imbdInput)
         if (!titleInput && !yearInput && !imbdInput) {
             toast("No input!","warning");
         }else if (!titleInput && yearInput) {
@@ -36,6 +37,7 @@ $(document).ready(() => {
         }else{
             $('.search-input').find('.loader').show();
             getMovieInfo(`?t=${titleInput}&y=${yearInput}&i=${imbdInput}`,'title');
+            getStoryline(`?t=${titleInput}&y=${yearInput}&i=${imbdInput}`);
         }
 	});
 
@@ -57,6 +59,15 @@ $( window ).resize(function() {
              height: ${bodyHeight.top}px;
            }</style>` ).appendTo( "head" );
 	}
+
+    if ($(document).width() < 992 && $(document).width() > 400) {
+        setPagination(totalPages,4);
+    }else if ($(document).width() < 400){
+        setPagination(totalPages,1);
+    }else{
+        setPagination(totalPages);
+    }
+
 });//end window.resize function
 
 let toast = (message,type="danger") => {
@@ -71,13 +82,22 @@ let toast = (message,type="danger") => {
     setTimeout(()=>{ t.animate({opacity: "0",bottom: "+=100px"}); }, 5000);
     }
 
+let setPagination = (totalPages,visiblePages=10) => {
+    visiblePages = visiblePages;
+    $pagination.twbsPagination('destroy');
+    $pagination.twbsPagination({
+        totalPages: totalPages,
+        visiblePages: visiblePages,
+        initiateStartPageClick: false,
+        hideOnlyOnePage: true,
+        onPageClick: function (event, page) {
+            $('#page-content').text('Page ' + page);
+            getMovieInfo(`?s=${searchInput}&page=${page}&type=${inputType}`,'search',true);
+        }
+    });
+};
+
 let getMovieInfo = (params,requestType="search",pageRequst=false) => {
-
-    console.log("making request")
-    console.log(`${params}&apikey=243fd441`);
-    console.log("pageRequst: "+pageRequst);
-
-    let $pagination = $('#pagination-search');
 
     $.ajax({
         type: 'GET', 
@@ -85,26 +105,33 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
         url: `https://www.omdbapi.com/${params}&apikey=243fd441`, 
 
         success: (data) => { 
-            console.log(data);
 		 if (data.Response == 'True') {
-            console.log("RUNNING CODE")
             if(data.Search){
+                //search data
             	movieInfo = data.Search;
-            	let searchType = inputType; 
+
+            	let searchType = inputType;
+                //adding 's' to the end of searchType if it doesn't end with 's'
+                //and search results are greater than 1
             	if (!searchType.endsWith('s') && data.totalResults > 1) {
             		searchType += 's';
             	}
-
             	$('#result-count').text(`${data.totalResults} ${searchType} found with '${searchInput}'`);
-            	let resultsContainer = $('#movie-results');
+            	
+                let resultsContainer = $('#movie-results');
             	resultsContainer.html("");
+
+                //looping through all found movies
             	for(let movie of movieInfo){
-            		let moviePoster;
+                    
+                    let moviePoster;
             		if (movie.Poster !=="N/A") {
             			moviePoster = movie.Poster;
             		}else{
             			moviePoster = `images/${inputType}-poster-placeholder.jpg`;
             		}
+
+                    //adding all found movies to resultContainer
             		let movieSearchCard = `
             			<div class="col-5 col-sm-4 col-md-3 col-lg-2 col-xl-1 mx-2 search-card my-2">
 						<div class="row text-center">
@@ -122,71 +149,122 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
             		resultsContainer.append(movieSearchCard);
             	}//end for loop
 
+                //to get full details of a movie on click
  				$(resultsContainer).find('.search-card').click(function(){
- 					console.log('search item clicked')
- 					getMovieInfo(`?i=${$(this).find('.search-imbd').text()}`,'id');
+                    let id = $(this).find('.search-imbd').text();
+ 					getMovieInfo(`?i=${id}`,'id');
  					$(this).find('.loader').show();
+                    getStoryline(`?i=${id}`);
  				});
 
+                //setting pagination if it's a search request
             	if (!pageRequst) {
-            	 $pagination.twbsPagination('destroy');
-            	 $pagination.twbsPagination({
-			        totalPages: Math.ceil(data.totalResults/10),
-			        visiblePages: 10,
-			        onPageClick: function (event, page) {
-			            $('#page-content').text('Page ' + page);
-			            getMovieInfo(`?s=${searchInput}&page=${page}&type=${inputType}`,'search',true);
-			        }
-			     });
+                    if ($(document).width() < 992) {
+                        visiblePages = 4;
+                    }
+                 totalPages = Math.ceil(data.totalResults/10);
+            	 setPagination(totalPages,visiblePages)
             	}//end if(!pageRequest)
 
             //end data.Search if
             }else{
+                //particular movie data
             	movieInfo = data;
             	$('#movie-card').show();
-            	 $(".movie-name").text(`${movieInfo.Title} (${movieInfo.Year})`);
-            	 let moviePoster;
-            	 if (movieInfo.Poster == "N/A") {
-            	 	moviePoster = `images/${inputType}-poster-placeholder.jpg`;
-            	 }else{
-            	 	 moviePoster = movieInfo.Poster;
-            	 }
-            	 $(".movie-poster").attr("src",moviePoster);
-            	 $(".movie-runtime").text(`${movieInfo.Runtime} | ${movieInfo.Genre} | ${movieInfo.Released}`);
-            	 $(".movie-plot").text(movieInfo.Plot);
-            	 $(".movie-director").html(`<b>Director:</b> ${movieInfo.Director}`);
-            	 $(".movie-writer").html(`<b>Writer:</b> ${movieInfo.Writer}`);
-            	 $(".movie-actors").html(`<b>Actors:</b> ${movieInfo.Actors}`);
-            	 $(".movie-rated").html(
-            	 	`<span class="col-auto">
-            	 		<b>Rated:</b>&nbsp;${movieInfo.Rated}
-            	 	</span>
-            	 	<span class="col-auto">
-            	 		<b>Language:</b>&nbsp;${movieInfo.Language}
-            	 	</span>
-            	 	<span class="col-auto">
-            	 		<b>Country:</b>&nbsp;${movieInfo.Country}
-            	 	</span>`);
-                if (!movieInfo.Awards == "N/A") {
-            	   $(".movie-awards").html(`<b>Awards:</b> ${movieInfo.Awards}`);
-                }
-            	$(".movie-ratings").html('<span class="col-auto pr-0"><b>Ratings:</b></span>');
-            	for(let rating in movieInfo.Ratings){
-            	   console.log(movieInfo.Ratings[rating].Source);
-            	   $(".movie-ratings").append(`<span class="col-auto text-center reduced-line-height mt-1">${movieInfo.Ratings[rating].Source}:<br><span class="">${movieInfo.Ratings[rating].Value}</span></span>`);
+            	$(".movie-name").text(`${movieInfo.Title} (${movieInfo.Year})`);
+            	
+                let moviePoster;
+            	if (movieInfo.Poster == "N/A") {
+            	   moviePoster = `images/${inputType}-poster-placeholder.jpg`;
+            	}else{
+            	   moviePoster = movieInfo.Poster;
             	}
-            	$(".movie-production").html(`<b>Production:</b>&nbsp;${movieInfo.Production}`);
-            	if (!movieInfo.BoxOffice == "N/A") {
+
+            	$(".movie-poster").attr("src",moviePoster);
+            	$(".movie-runtime").text(`${movieInfo.Runtime}&nbsp;|&nbsp;${movieInfo.Genre}&nbsp;|&nbsp;${movieInfo.Released}`);
+            	$(".movie-plot").text(movieInfo.Plot);
+            	$(".movie-director").html(`<b>Director:</b> ${movieInfo.Director}`);
+            	$(".movie-writer").html(`<b>Writer:</b> ${movieInfo.Writer}`);
+            	$(".movie-actors").html(`<b>Actors:</b> ${movieInfo.Actors}`);
+                
+                //setting movie rated certificate logo
+                let rated = movieInfo.Rated;
+                if (rated !== "N/A") {
+                    $(".movie-rated").html(`<img src="images/rated/${rated}.png" class="img-fluid" alt="${rated}">`);
+                }else{
+                    $(".movie-rated").html('');
+                }
+
+                $(".movie-details").html(
+            	   `<span class="col-12">
+            	       <b>Website:</b>&nbsp;<a href="${movieInfo.Website}">${movieInfo.Website}</a>
+            	   </span>
+                   <span class="col-12">
+                       <b>Country:</b>&nbsp;${movieInfo.Country}
+                   </span>
+            	   <span class="col-12">
+            	       <b>Language:</b>&nbsp;${movieInfo.Language}
+            	   </span>
+                   <span class="col-12">
+                       <b>Released Date:</b>&nbsp;${movieInfo.Released}
+                   </span>
+                   <span class="col-12">
+                       <b>DVD:</b>&nbsp;${movieInfo.DVD}
+                   </span>
+                   <span class="col-12">
+                       <b>Production Co:</b>&nbsp;${movieInfo.Production}
+                   </span>
+            	   `);
+
+                $(".movie-imbd").html(
+                   `<span class="col-12">
+                       <b>Id:</b>&nbsp;${movieInfo.imdbID}
+                   </span>
+                   <span class="col-12">
+                       <b>Votes:</b>&nbsp;${movieInfo.imdbVotes}
+                   </span>
+                   <span class="col-12">
+                       <b>Rating:</b>&nbsp;${movieInfo.imdbRating}
+                   </span>
+                   `);
+
+                if (movieInfo.Awards !== "N/A") {
+                    $(".awards-card").show();
+            	   $(".movie-awards").text(movieInfo.Awards);
+                }else{
+                    $(".awards-card").hide();
+                }
+
+            	$(".movie-ratings .source").html('');
+            	for(let rating in movieInfo.Ratings){
+            	   $(".movie-ratings .source").append(`
+                        <div class="col-12 col-sm-4 col-md-auto text-center right-seperator">
+
+                        <div class="row align-items-center justify-content-center py-2 py-md-0">
+                        <div class="col-12 col-md-auto pr-md-0 pb-2 pb-md-0">
+                        <img class="img-fluid rating-source-logo" src="images/rating_source/${movieInfo.Ratings[rating].Source}.png">
+                        </div>
+                        <div class="col-auto reduced-line-height">
+                        ${movieInfo.Ratings[rating].Value}<br>
+                        <small>${movieInfo.Ratings[rating].Source}</small>
+                        </div>
+                        </div>
+
+                        </div>`);
+            	}
+
+            	if (movieInfo.BoxOffice !== "N/A") {
             	   $(".movie-box-office").html(`<b>Box office:</b>&nbsp;${movieInfo.BoxOffice}`);
             	}
-            	if (!movieInfo.Website == "N/A") {
-            	   $(".movie-website").html(`<b>Website:</b>&nbsp;<a href="${movieInfo.Website}">${movieInfo.Website}</a>`);
+            	if (movieInfo.Website !== "N/A") {
+            	   $(".movie-website").html();
             	}
             	$(".movie-yt").html(`<small><a href="https://www.youtube.com/results?search_query=${movieInfo.Title} ${movieInfo.Year} trailer" target="blank">View trailer on Youtube</a></small>`);
             	$('.search-input').css("background","rgba(0,0,0,0.7)");
             	$('.display-4').find('span').first().css("background","rgba(255,255,255,0.8)");
             	$('.display-4').find('span').last().css("background","rgba(247,92,81,0.8)");
             	
+
             }//end else
         }else{
             if (data.Error) {
@@ -212,7 +290,6 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
 
         },
         complete: (data) => {
-            console.log(data)
 
             //if poster can't be loaded or is 404, replacing with placeholder.
     		$(".movie-poster,.movie-search-poster").on("error",function() {
@@ -220,6 +297,7 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
 				this.src = `images/${inputType}-poster-placeholder.jpg`;
 			});
 
+            //scrollling window and applying background
             if (data.responseJSON !== undefined) {
                 if (!data.responseJSON.Error) {
                     if (requestType == "search") {
@@ -232,20 +310,20 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
                         }, 1000);
                         $('#result-count').css({"color":"#fff","background":"rgba(247,92,81,0.8)"});
                     }
+                    setTimeout(()=>{ 
+                        //setting poster as body blurred background
+                        bodyHeight = $('footer').offset();
+                        $('head').find('style').remove();
+                        $( `<style>body:before 
+                            { background-image: url(${movieInfo.Poster});
+                            height: ${bodyHeight.top}px;
+                            }</style>` ).appendTo( "head" );
+                    }, 1000);
                 }
             }
 
+            //hiding loader
             $('.loader').hide();
-
-            setTimeout(()=>{ 
-                //setting poster as body blurred background
-                    bodyHeight = $('footer').offset();
-                    $('head').find('style').remove();
-                    $( `<style>body:before 
-                        { background-image: url(${movieInfo.Poster});
-                        height: ${bodyHeight.top}px;
-                        }</style>` ).appendTo( "head" );
-            }, 1000);
 
         	},
 
@@ -255,3 +333,32 @@ let getMovieInfo = (params,requestType="search",pageRequst=false) => {
 
 } // end of getMovieInfo
 
+//function to get movie storyline
+let getStoryline = (params) => {
+    $.ajax({
+        type: 'GET', 
+        dataType: 'json', 
+        url: `https://www.omdbapi.com/${params}&plot=full&apikey=243fd441`, 
+        success: (data) => { 
+            let storyline = $('.movie-storyline');
+            let shortPlot = $('.movie-plot').text();
+            storyline.parent().show();
+            storyline.html(data.Plot);
+            if (shortPlot == storyline.text()) {
+                storyline.parent().hide();
+            }
+        },
+        error: (data) => {
+        },
+
+        beforeSend: () => {
+
+        },
+        complete: () => {
+
+        },
+
+        timeout:10000 // this is in milli seconds
+
+    });
+};

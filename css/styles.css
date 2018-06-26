@@ -17,6 +17,9 @@ body:before {
     -webkit-transition: all 1s ease-in-out;
 	transition: all 1s ease-in-out;
 }
+::selection {
+    background: orange;
+}
 /*body *{
 	outline: 1px solid yellow;
 }*/
@@ -130,12 +133,52 @@ select.type-select option:hover {
 .movie-info{
 	color: #fff;
 	background: rgba(0,0,0,0.7);
-	margin: 4rem 0rem;
+	margin-top: 4rem;
 	width: 100%;
 	/*height: 80vh;*/
 }
 #movie-card{
 	display: none;
+}
+.detail-card{
+	background: rgba(63,3,3,0.7);
+	word-break: break-all;
+}
+.detail-card .lead{
+	font-weight: 300;
+}
+.awards-card{
+	background: rgba(63, 25, 3, 0.7);
+}
+ .movie-rated img{
+ 	width: 5vw;
+    height: auto;
+ }
+.movie-ratings{
+	padding: 1rem 0rem;
+	display: inline-flex;
+	justify-content: center;
+}
+.movie-ratings small{
+	color: lightgrey;
+}
+.rating-source-logo{
+	height: 5vh;
+	width: auto;
+	filter: grayscale(1);
+	transition: all 0.5s ease;
+}
+.rating-source-logo:hover{
+	filter: grayscale(0);
+}
+.right-seperator{
+	border-right: 0.5px solid grey; 
+}
+.right-seperator:last-child{
+	border: none;
+}
+img.imbd{
+	width: 4rem;
 }
 #movie-results{
 	background: rgba(0,0,0,0.5);
@@ -158,7 +201,7 @@ select.type-select option:hover {
 	line-height: 85%;
 }
 .movie-data{
-	
+	padding-bottom: 8vh;
 }
 .movie-poster{
 	height: 100%;
