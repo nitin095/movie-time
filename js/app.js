@@ -119,7 +119,7 @@ let getMovieInfo = (params, requestType = "search", pageRequst = false) => {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: `https://www.omdbapi.com/${params}&apikey=243fd441`,
+        url: `http://www.omdbapi.com/${params}&apikey=243fd441`,
 
         success: (data) => {
             if (data.Response == 'True') {
