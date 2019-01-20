@@ -1,6 +1,8 @@
 # Movie-Time
 Search movies, series, episodes and games using OMBd API.
 
+[View built project](https://nitin095.github.io/movie-time/)
+
 ## Technologies used
 - HTML
 - CSS
